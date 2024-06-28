@@ -1,0 +1,220 @@
+# Creating ATM
+command /setatm:
+  permission: permission:.builder
+  trigger:
+    # Get the block location where the player is looking
+    set {block} to block at target block of player 
+    set {block_location} to location of {block}
+
+    # Check if the block is already marked as ATM
+    if {atm::%{block_location}%} is not set:
+      set {atm::%{block_location}%} to true
+
+      send "ATM Flag set" to player
+    else:
+      send "This is already marked as ATM"
+
+# Deleting ATM
+command /removeatm:
+  permission: permission.builder
+  trigger:
+    # Get the block location where the player is looking
+    set {block} to block at target block of player
+    set {block_location} to location of {block}
+  
+    # Check if the block is marked as an ATM
+    if {atm::%{block_location}%} is set:
+      # Remove the ATM flag from the block
+      delete {atm::%{block_location}%}
+        
+      # Send confirmation message to the player
+      send "ATM flag removed for the block you're looking at!" to player
+    else:
+      send "This block is not currently marked as an ATM." to player
+
+# Deposit 
+on inventory click:
+  if name of event-item is "&aDeposit":
+    close inventory of player
+    send title "&7Depositing Proccess" to player for 20 second
+    send subtitle "(&eRight-Click&f) on &aATM &fdeposit" for 2 seconds
+    play sound {screenPrompt} to player
+    wait 2 seconds
+    play sound {screenPrompt} to player
+    send subtitle "(&eShift + Right-Click&f) on &aATM &fdeposit all together!" for 2 seconds
+    wait 4 seconds 
+    send title {emptyTitle} to player for 1 second
+    send subtitle {emptyTitle} to player for 1 second
+    stop
+
+# Singular Emerald Deposit
+on right-click:
+    set {block_location} to location of event-block
+    if {atm::%{block_location}%} is set:
+        if player's tool is emerald:
+            play sound {deposit} to player
+            remove 1 emerald from player
+            add 1 to {balance.%uuid of player%}
+            send title "&aSuccessful Deposit!" for 0.5 second
+            send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second
+            cancel event
+
+# Depositing All Emeralds
+on right-click:
+    set {block_location} to location of event-block
+    if {atm::%{block_location}%} is set:
+        if player is sneaking:
+            if player's tool is emerald:
+                play sound {deposit} to player
+                set {emeraldAmount} to amount of emerald in player's inventory
+                remove all emerald from player's inventory
+                add {emeraldAmount} to {balance.%uuid of player%}
+                send title "&aSuccessful Deposit!" for 0.5 second 
+                send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second 
+                cancel event
+
+# Singular Emerald Block Deposit
+on right-click:
+    set {block_location} to location of event-block
+    if {atm::%{block_location}%} is set:
+        if player's tool is emerald block:
+            play sound {deposit} to player
+            remove 1 emerald block from player
+            add 64 to {balance.%uuid of player%}
+            send title "&aSuccessful Deposit!" for 0.5 second
+            send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second
+            cancel event
+
+# Depositing All Emerald Blocks
+on right-click:
+    set {block_location} to location of event-block
+    if {atm::%{block_location}%} is set:
+        if player is sneaking:
+            if player's tool is emerald block:
+                play sound {deposit} to player
+                set {_emeraldAmount} to amount of emerald block in player's inventory
+                remove all emerald block from player's inventory
+                add ({_emeraldAmount} * 64) to {balance.%uuid of player%}
+                send title "&aSuccessful Deposit!" for 0.5 second 
+                send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second 
+                cancel event
+
+# Withdraw
+on inventory click:
+    if name of event-item is "&eWithdraw":
+        # Setting Rows
+        set {_guiScotiablockWithdraw}  to a new chest inventory with 1 rows named "&eWithdraw Options"
+        set slot 0 of {_guiScotiablockWithdraw} to 1 emerald with name "&c1 Emerald"
+        set slot 1 of {_guiScotiablockWithdraw} to 16 emerald with name "&c16 Emeralds"
+        set slot 2 of {_guiScotiablockWithdraw} to 32 emerald with name "&c32 Emeralds"
+        set slot 3 of {_guiScotiablockWithdraw} to 1 yellow stained glass pane
+        set slot 4 of {_guiScotiablockWithdraw} to 1 barrier with name "&cBack"
+        set slot 5 of {_guiScotiablockWithdraw} to 1 yellow stained glass pane
+        set slot 6 of {_guiScotiablockWithdraw} to 1 emerald block with name "&c1 Emerald Block" with lore {emeraldBlockLore}
+        set slot 7 of {_guiScotiablockWithdraw} to 16 emerald block with name "&c16 Emerald Blocks" with lore {emeraldBlockLore}
+        set slot 8 of {_guiScotiablockWithdraw} to 32 emerald block with name "&c32 Emerald Blocks" with lore {emeraldBlockLore}
+        open {_guiScotiablockWithdraw} to player 
+        play sound {successful} to player
+        cancel event
+
+
+# Withdraw 
+on inventory click:
+    if name of event-inventory is "&eWithdraw Options":
+        if name of event-item is "&c1 Emerald":
+            if {balance.%uuid of player%} is greater than or equal to 1:
+                add 1 emerald named {emerald} to player
+                add -1 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        if name of event-item is "&c16 Emeralds":
+            if {balance.%uuid of player%} is greater than or equal to 16:
+                add 16 emeralds named {emerald} to player
+                add -16 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        if name of event-item is "&c32 Emeralds":
+            if {balance.%uuid of player%} is greater than or equal to 32:
+                add 32 emeralds named {emerald} to player
+                add -32 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        if name of event-item is "&c1 Emerald Block":
+            if {balance.%uuid of player%} is greater than or equal to 64:
+                add 1 emerald block named {emeraldBlock} with lore {emeraldBlockLore} to player
+                add -64 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        if name of event-item is "&c16 Emerald Blocks":
+            if {balance.%uuid of player%} is greater than or equal to 1024:
+                add 16 emerald blocks named {emeraldBlock} with lore {emeraldBlockLore} to player
+                add -1024 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        if name of event-item is "&c32 Emerald Blocks":
+            if {balance.%uuid of player%} is greater than or equal to 2048:
+                add 32 emerald blocks named {emeraldBlock} with lore {emeraldBlockLore} to player
+                add -2048 to {balance.%uuid of player%}
+                play sound {sounds_PickUp}  to player
+            else:
+                play sound {failed} to player
+                close inventory of player
+                send title {text-failed-Withdraw} for 2 seconds
+        
+#Back button
+on inventory click:
+    # Check if the clicked item is named "&cBack"
+    if name of event-item is "&cBack":
+        # Check if the current GUI is named "&eWithdraw Options"
+        if name of event-inventory is "&eWithdraw Options":
+            # Handle the "back" button click within the ScotiablockWithdraw GUI
+            close inventory of player
+            # Reopen the main Scotiablock ATM GUI
+            # Setting Rows
+            set {_guiScotiablock} to a new chest inventory with 1 rows named "&c&lScotiablock ATM"
+            set slot 4 of {_guiScotiablock} to an paper named "Chequing Account" with lore "&bBalance: $%{balance.%uuid of player%}%"
+            set slot 2 of {_guiScotiablock} to torch named "&aDeposit" with lore "&7Deposit to your bank account"
+            set slot 6 of {_guiScotiablock} to a redstone torch named "&eWithdraw" with lore "&7Withdraw from your bank account"
+            open {_guiScotiablock} to player
+            play sound {successful} to player
+            cancel event
+
+    # Prevent players from taking items out of the ScotiablockWithdraw GUI
+    if name of event-inventory is "&c&lScotiablockWithdraw":
+        cancel event
+
+# Preventing ATM Actions
+on left-click:
+    set {block_location} to location of event-block
+    if {atm::%{block_location}%} is set:
+        cancel event
+        # Setting Rows
+        set {_guiScotiablock} to a new chest inventory with 1 rows named "&c&lScotiablock ATM"
+        set slot 4 of {_guiScotiablock} to an paper named "Chequing Account" with lore "&bBalance: $%{balance.%uuid of player%}%"
+        set slot 2 of {_guiScotiablock} to torch named "&aDeposit" with lore "&7Deposit to your bank account"
+        set slot 6 of {_guiScotiablock} to a redstone torch named "&eWithdraw" with lore "&7Withdraw from your bank account"
+        open {_guiScotiablock} to player
+        play sound {successful} to player
+        cancel event
+
+# Prevents players from taking items out of event inventory
+on inventory click:
+    if name of event-inventory contains "&c&lScotiablock ATM":
+        cancel event
+    if name of event-inventory contains "&eWithdraw Options":
+        cancel event

@@ -1,0 +1,67 @@
+# On right click of Phone
+on rightclick:
+  if player's tool is a brick named "Phone":
+    # Setting Rows
+    set {_gui} to a new chest inventory with 1 rows named "%player%'s Phone"
+    set slot 1 of {_gui} to an emerald named "&c&lScotiablock" with lore "Manage your finances remotely"
+    set slot 3 of {_gui} to a book named "&b&lBlockbook" with lore "Connect with friends"
+    set slot 5 of {_gui} to a jukebox named "&a&lBlockify" with lore "Music for everyone"
+    set slot 7 of {_gui} to player's head named "&l%player%'s stats" with lore "Featured coming soon"
+    open {_gui} to player
+    play sound {successful} to player
+    stop
+
+# Scotiablock GUI 
+on inventory click:
+  if name of event-item is "&c&lScotiablock":
+    # Setting Rows
+    set {_guiScotiablock} to a new chest inventory with 1 rows named "&c&lScotiablock"
+    set slot 3 of {_guiScotiablock} to an paper named "Chequing Account" with lore "&bBalance: $%{balance.%uuid of player%}%"
+    set slot 5 of {_guiScotiablock} to a barrier named "&c&lBack"
+    open {_guiScotiablock} to player
+    play sound {successful} to player
+    stop
+
+# Blockbook GUI 
+on inventory click:
+  if name of event-item is "&b&lBlockbook":
+    close inventory of player
+    play sound {failed} to player 
+    send title {comingSoon} to player for 1.5 second
+    stop
+
+# Blockify GUI 
+on inventory click:
+  if name of event-item is "&a&lBlockify":
+    close inventory of player
+    play sound {failed} to player 
+    send title {comingSoon} to player for 1.5 second
+    stop
+
+# Player Stats
+on inventory click:
+  if name of event-item is "&l%player%'s stats":
+    close inventory of player
+    play sound {failed} to player 
+    send title {comingSoon} to player for 1.5 second
+    stop
+
+# Back Button
+on inventory click:
+  if name of event-item is "&c&lBack":
+    # Setting Rows
+    set {_gui} to a new chest inventory with 1 rows named "%player%'s Phone"
+    set slot 1 of {_gui} to an emerald named "&c&lScotiablock" with lore "Manage your finances remotely"
+    set slot 3 of {_gui} to a book named "&b&lBlockbook" with lore "Featured coming soon"
+    set slot 5 of {_gui} to a jukebox named "&a&lBlockify" with lore "Music for everyone"
+    set slot 7 of {_gui} to player's head named "%player%'s stats" with lore "Featured coming soon"
+    open {_gui} to player
+    play sound {successful} to player
+    stop
+
+# Prevents players from taking items out of event inventory
+on inventory click:
+  if name of event-inventory contains "%player%'s Phone":
+    cancel event
+  if name of event-inventory contains "&c&lScotiablock":
+    cancel event

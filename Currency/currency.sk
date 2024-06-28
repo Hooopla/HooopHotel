@@ -1,0 +1,14 @@
+command /spawnphone:
+  trigger:
+    give player 1 brick named "Phone"
+
+on join:
+  if {balance.%uuid of player%} is not set:
+    set {balance.%uuid of player%} to 0
+
+
+# Debugging Commands
+command /reset-funds:
+  trigger:
+    set {balance.%uuid of player%} to 0 
+    send title "Set Balance back to 0" to player

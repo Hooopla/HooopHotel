@@ -1,0 +1,8 @@
+on load:
+  # Sound Effects
+  set {successful} to "ENTITY_EXPERIENCE_ORB_PICKUP"
+  set {failed} to "block.anvil.land"
+  set {deposit} to "entity.item.pickup"
+  set {login} to "block.note_block.bell"
+  set {screenPrompt} to "entity.villager.yes"
+  set {sounds_PickUp} to "entity.item.pickup"

@@ -1,0 +1,8 @@
+on load:
+  set {title} to "&eHooop &8Hotel"
+  set {version}  to "0.0"
+on join:
+  send title {title} to player for 2 seconds
+  send subtitle "&7Version: %{version}%" to player for 2 seconds
+  play sound {login} to player
+

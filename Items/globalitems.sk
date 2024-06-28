@@ -1,0 +1,9 @@
+command /giveEmerald:
+  permission: permission.builder
+  trigger:
+    give 1 emerald with name {emerald} to player
+
+command /giveEmeraldBlock:
+  permission: permission.builder
+  trigger:
+    give 1 emerald block with name {emeraldBlock} with lore {emeraldBlockLore} to player

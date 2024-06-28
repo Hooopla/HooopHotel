@@ -1,0 +1,4 @@
+# Preventing players from crafting items!
+on craft:
+    if player does not have permission "permission.builder":
+        cancel event
