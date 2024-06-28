@@ -6,6 +6,3 @@ on load:
   set {emeraldBlock} to "&aEmerald Block"
   set {emeraldBlockLore} to "&7Each block is 64 emeralds combined!"
   set {text-failed-Withdraw} to "&cInsufficient Funds"
-
-  # testing
-  # testing again
