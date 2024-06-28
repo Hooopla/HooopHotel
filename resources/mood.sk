@@ -1,0 +1,32 @@
+# Mood System
+# How do we increase it? Doing things like listening to music, playing games etc.
+# Max Mood is 100
+on load:
+  set {mood_happy} to 100 # 100 - 76 
+  set {mood_great} to 75 # 75 - 51
+  set {mood_neutural} to 50 # 50 - 26
+  set {mood_okay} to 25  # 25 - 1
+  set {mood_sad} to 0 # Depressed
+
+  on join:
+    if {mood.%uuid of player%} is not set:
+      set {mood.%uuid of player%} to 100
+
+
+command /mood <text> <text>:
+  permission: admin
+  trigger:
+    if arg-1 is "set":
+      if arg-2 is "happy":
+        set {mood.%uuid of player%} to 100
+      else if arg-2 is "great":
+        set {mood.%uuid of player%} to 75
+      else if arg-2 is "neutural":
+        set {mood.%uuid of player%} to 50
+      else if arg-2 is "okay":
+        set {mood.%uuid of player%} to 25
+      else if arg-2 is "sad":
+        set {mood.%uuid of player%} to 0
+      else:
+        # Handle invalid mood input
+        send "Invalid mood. Please choose from happy, great, okay, sad, or depressed."
