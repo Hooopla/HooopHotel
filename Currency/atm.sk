@@ -3,12 +3,12 @@ command /setatm:
   permission: permission:.builder
   trigger:
     # Get the block location where the player is looking
-    set {block} to block at target block of player 
-    set {block_location} to location of {block}
+    set {_block} to block at target block of player 
+    set {_block_location} to location of {_block}
 
     # Check if the block is already marked as ATM
-    if {atm::%{block_location}%} is not set:
-      set {atm::%{block_location}%} to true
+    if {atm::%{_block_location}%} is not set:
+      set {atm::%{_block_location}%} to true
 
       send "ATM Flag set" to player
     else:
@@ -19,13 +19,13 @@ command /removeatm:
   permission: permission.builder
   trigger:
     # Get the block location where the player is looking
-    set {block} to block at target block of player
-    set {block_location} to location of {block}
+    set {_block} to block at target block of player
+    set {_block_location} to location of {_block}
   
     # Check if the block is marked as an ATM
-    if {atm::%{block_location}%} is set:
+    if {atm::%{_block_location}%} is set:
       # Remove the ATM flag from the block
-      delete {atm::%{block_location}%}
+      delete {atm::%{_block_location}%}
         
       # Send confirmation message to the player
       send "ATM flag removed for the block you're looking at!" to player
@@ -49,8 +49,8 @@ on inventory click:
 
 # Singular Emerald Deposit
 on right-click:
-    set {block_location} to location of event-block
-    if {atm::%{block_location}%} is set:
+    set {_block_location} to location of event-block
+    if {atm::%{_block_location}%} is set:
         if player's tool is emerald:
             play sound {deposit} to player
             remove 1 emerald from player
@@ -61,22 +61,22 @@ on right-click:
 
 # Depositing All Emeralds
 on right-click:
-    set {block_location} to location of event-block
-    if {atm::%{block_location}%} is set:
+    set {_block_location} to location of event-block
+    if {atm::%{_block_location}%} is set:
         if player is sneaking:
             if player's tool is emerald:
                 play sound {deposit} to player
-                set {emeraldAmount} to amount of emerald in player's inventory
+                set {_emeraldAmount} to amount of emerald in player's inventory
                 remove all emerald from player's inventory
-                add {emeraldAmount} to {balance.%uuid of player%}
+                add {_emeraldAmount} to {balance.%uuid of player%}
                 send title "&aSuccessful Deposit!" for 0.5 second 
                 send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second 
                 cancel event
 
 # Singular Emerald Block Deposit
 on right-click:
-    set {block_location} to location of event-block
-    if {atm::%{block_location}%} is set:
+    set {_block_location} to location of event-block
+    if {atm::%{_block_location}%} is set:
         if player's tool is emerald block:
             play sound {deposit} to player
             remove 1 emerald block from player
@@ -87,14 +87,14 @@ on right-click:
 
 # Depositing All Emerald Blocks
 on right-click:
-    set {block_location} to location of event-block
-    if {atm::%{block_location}%} is set:
+    set {_block_location} to location of event-block
+    if {atm::%{_block_location}%} is set:
         if player is sneaking:
             if player's tool is emerald block:
                 play sound {deposit} to player
-                set {_emeraldAmount} to amount of emerald block in player's inventory
+                set {__emeraldAmount} to amount of emerald block in player's inventory
                 remove all emerald block from player's inventory
-                add ({_emeraldAmount} * 64) to {balance.%uuid of player%}
+                add ({__emeraldAmount} * 64) to {balance.%uuid of player%}
                 send title "&aSuccessful Deposit!" for 0.5 second 
                 send subtitle "&eTotal: $%{balance.%uuid of player%}%" for 0.5 second 
                 cancel event
@@ -200,8 +200,8 @@ on inventory click:
 
 # Preventing ATM Actions
 on left-click:
-    set {block_location} to location of event-block
-    if {atm::%{block_location}%} is set:
+    set {_block_location} to location of event-block
+    if {atm::%{_block_location}%} is set:
         cancel event
         # Setting Rows
         set {_guiScotiablock} to a new chest inventory with 1 rows named "&c&lScotiablock ATM"
