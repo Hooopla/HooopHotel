@@ -8,9 +8,9 @@ on load:
   set {mood_okay} to 25  # 25 - 1
   set {mood_sad} to 0 # Depressed
 
-  on join:
-    if {mood.%uuid of player%} is not set:
-      set {mood.%uuid of player%} to 100
+on join:
+  if {mood.%uuid of player%} is not set:
+    set {mood.%uuid of player%} to 100
 
 
 command /mood <text> <text>:
@@ -19,14 +19,19 @@ command /mood <text> <text>:
     if arg-1 is "set":
       if arg-2 is "happy":
         set {mood.%uuid of player%} to 100
+        send title "&eCurrent Mood" with subtitle "&a&lHappy" 
       else if arg-2 is "great":
         set {mood.%uuid of player%} to 75
+        send title "&eCurrent Mood" with subtitle "&aHappy" 
       else if arg-2 is "neutural":
         set {mood.%uuid of player%} to 50
+        send title "&eCurrent Mood" with subtitle "&aHappy" 
       else if arg-2 is "okay":
         set {mood.%uuid of player%} to 25
+        send title "&eCurrent Mood" with subtitle "&aHappy" 
       else if arg-2 is "sad":
         set {mood.%uuid of player%} to 0
+        send title "&eCurrent Mood" with subtitle "&aHappy" 
       else:
         # Handle invalid mood input
         send "Invalid mood. Please choose from happy, great, okay, sad, or depressed."
