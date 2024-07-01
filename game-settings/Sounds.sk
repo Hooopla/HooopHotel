@@ -5,6 +5,7 @@ on load:
   set {deposit} to "entity.item.pickup"
   set {login} to "block.note_block.bell"
   set {screenPrompt} to "entity.villager.yes"
+  set {sounds_Happy} to "entity.player.levelup"
   set {sounds_PickUp} to "entity.item.pickup"
   set {sounds_Great} to "entity.villager.celebrate"
   set {sounds_Neutral} to "block.note_block.hat"
