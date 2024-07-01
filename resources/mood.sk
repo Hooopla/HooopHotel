@@ -11,6 +11,9 @@ on load:
 on join:
   if {mood.%uuid of player%} is not set:
     set {mood.%uuid of player%} to 100
+  if {current_Mood::%uuid of player%} is not set:
+    set {current_Mood::%uuid of player%} to "Happy"
+    set {last_Mood::%uuid of player%} to "Happy"
 
 
 command /mood <text> <text>:
@@ -19,33 +22,33 @@ command /mood <text> <text>:
     if arg-1 is "set":
       if arg-2 is "happy":
         set {mood.%uuid of player%} to {mood_Happy}
-        send title "&eMood Change" with subtitle "You feel &a&lHappy" 
+        send title "&eMood Set" with subtitle "You feel &a&lHappy" 
         set player's level to {mood.%uuid of player%}
+        play sound {sounds_Happy} to player
         
-
       else if arg-2 is "great":
         set {mood.%uuid of player%} to {mood_Great}
-        send title "&eMood Change" with subtitle "You feel &e&lGreat" 
+        send title "&eMood Set" with subtitle "You feel &e&lGreat" 
         set player's level to {mood.%uuid of player%}
-
+        play sound {sounds_Great} to player
 
       else if arg-2 is "neutral":
         set {mood.%uuid of player%} to {mood_Neutral}
-        send title "&eMood Change" with subtitle "You feel &f&lNeutural" 
+        send title "&eMood Set" with subtitle "You feel &f&lNeutural" 
         set player's level to {mood.%uuid of player%}
-
+        play sound {sounds_Neutral} to player
 
       else if arg-2 is "okay":
         set {mood.%uuid of player%} to {mood_Okay}
-        send title "&eMood Change" with subtitle "You feel &c&lOkay" 
+        send title "&eMood Set" with subtitle "You feel &c&lOkay" 
         set player's level to {mood.%uuid of player%}
-
+        play sound {sounds_Okay} to player
 
       else if arg-2 is "sad":
         set {mood.%uuid of player%} to {mood_Sad}
-        send title "&eMood Change" with subtitle "You feel &b&lSad" 
+        send title "&eMood Set" with subtitle "You feel &b&lSad" 
         set player's level to {mood.%uuid of player%}
-
+        play sound {sounds_Sad} to player
 
       else:
         # Handle invalid mood input
@@ -53,12 +56,71 @@ command /mood <text> <text>:
 
 command /moodcheck:
   trigger:
-    send {mood.%uuid of player%}
+    # Check thresholds and send notifications accordingly
+    if {mood.%uuid of player%} > {mood_Great}:
+      send title "&eCurrent Mood" with subtitle "You feel &a&lHappy" to player
+      #play sound {sounds_Happy} to player
+    else if {mood.%uuid of player%} > {mood_Neutral}:
+      send title "&eCurrent Mood" with subtitle "You feel &e&lGreat" to player
+      #play sound {sounds_Great} to player
+    else if {mood.%uuid of player%} > {mood_Okay}:
+      send title "&eCurrent Mood" with subtitle "You feel &f&lNeutral" to player
+      #play sound {sounds_Neutral} to player
+    else if {mood.%uuid of player%} > {mood_Sad}:
+      send title "&eCurrent Mood" with subtitle "You think you feel &c&lOkay?..." to player
+      #play sound {sounds_Okay} to player 
+    else:
+      send title "&eCurrent Mood" with subtitle "You feel &b&lSad" to player
+      #play sound {sounds_Sad} to player
 
 every 30 seconds:
   loop all players:
-    if {mood.%uuid of loop-player%} > 1:
+    # To ensure that the mood does not go past 0.
+    if {mood.%uuid of loop-player%} > 0:
       remove 1 from {mood.%uuid of loop-player%}
       set loop-player's level to {mood.%uuid of loop-player%}
-    else:
-      send "Your mood is too low to decrease further." to loop-player
+
+      # Determine current mood
+      if {mood.%uuid of loop-player%} > {mood_Great}:
+        set {current_Mood::%uuid of loop-player%} to "Happy"
+      else if {mood.%uuid of loop-player%} > {mood_Neutral}:
+        set {current_Mood::%uuid of loop-player%} to "Great"
+      else if {mood.%uuid of loop-player%} > {mood_Okay}:
+        set {current_Mood::%uuid of loop-player%} to "Neutral"
+      else if {current_Mood::%uuid of loop-player%} > {mood_Sad}:
+        set {current_Mood::%uuid of loop-player%} to "Okay"
+      else:
+        set {current_Mood::%uuid of loop-player%} to "Sad"
+
+      # Check if mood has changed since last notification
+      if {current_Mood::%uuid of loop-player%} != {last_Mood::%uuid of loop-player%}:
+        # Send notification and update last notified mood
+        if {current_Mood::%uuid of loop-player%} = "Happy":
+          send title "&eMood Change" with subtitle "You feel &a&lHappy" to loop-player
+          play sound {sounds_Happy} to loop-player
+          remove slowness from loop-player
+          remove blindness from loop-player
+        else if {current_Mood::%uuid of loop-player%} = "Great":
+          send title "&eMood Change" with subtitle "You feel &e&lGreat" to loop-player
+          play sound {sounds_Great} to loop-player
+        else if {current_Mood::%uuid of loop-player%} = "Neutral":
+          send title "&eMood Change" with subtitle "You feel &f&lNeutral" to loop-player
+          play sound {sounds_Neutral} to loop-player
+          apply infinite potion of slowness of tier 1 without any particles to loop-player 
+        else if {current_Mood::%uuid of loop-player%} = "Okay":
+          send title "&eMood Change" with subtitle "You think you feel &c&lOkay?..." to loop-player
+          play sound {sounds_Okay} to loop-player
+          apply infinite potion of slowness of tier 2 without any particles to loop-player 
+          apply potion of nausea of tier 4 without any particles to loop-player for 10 seconds
+        else if {current_Mood::%uuid of loop-player%} = "Sad":
+          send title "&eMood Change" with subtitle "You feel &b&lSad" to loop-player
+          play sound {sounds_Okay} to loop-player
+          apply infinite potion of slowness of tier 3 without any particles to loop-player 
+          apply infinite potion of blindness of tier 1 without any particles to loop-player 
+
+        # Update last notified mood to current mood
+        set {last_Mood::%uuid of loop-player%} to {current_Mood::%uuid of loop-player%}
+
+
+
+    
