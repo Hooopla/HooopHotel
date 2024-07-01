@@ -6,3 +6,7 @@ on load:
   set {login} to "block.note_block.bell"
   set {screenPrompt} to "entity.villager.yes"
   set {sounds_PickUp} to "entity.item.pickup"
+  set {sounds_Great} to "entity.villager.celebrate"
+  set {sounds_Neutral} to "block.note_block.hat"
+  set {sounds_Okay} to "block.note_block.pling"
+  set {sounds_Sad} to "entity.villager.no"
