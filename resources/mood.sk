@@ -2,11 +2,11 @@
 # How do we increase it? Doing things like listening to music, playing games etc.
 # Max Mood is 100
 on load:
-  set {mood_happy} to 100 # 100 - 76 
-  set {mood_great} to 75 # 75 - 51
-  set {mood_neutural} to 50 # 50 - 26
-  set {mood_okay} to 25  # 25 - 1
-  set {mood_sad} to 0 # Depressed
+  set {mood_Happy} to 100 # 100 - 76 
+  set {mood_Great} to 75 # 75 - 51
+  set {mood_Neutral} to 50 # 50 - 26
+  set {mood_Okay} to 25  # 25 - 1
+  set {mood_Sad} to 0 # Depressed
 
 on join:
   if {mood.%uuid of player%} is not set:
@@ -18,20 +18,47 @@ command /mood <text> <text>:
   trigger:
     if arg-1 is "set":
       if arg-2 is "happy":
-        set {mood.%uuid of player%} to 100
-        send title "&eCurrent Mood" with subtitle "&a&lHappy" 
+        set {mood.%uuid of player%} to {mood_Happy}
+        send title "&eMood Change" with subtitle "You feel &a&lHappy" 
+        set player's level to {mood.%uuid of player%}
+        
+
       else if arg-2 is "great":
-        set {mood.%uuid of player%} to 75
-        send title "&eCurrent Mood" with subtitle "&aHappy" 
-      else if arg-2 is "neutural":
-        set {mood.%uuid of player%} to 50
-        send title "&eCurrent Mood" with subtitle "&aHappy" 
+        set {mood.%uuid of player%} to {mood_Great}
+        send title "&eMood Change" with subtitle "You feel &e&lGreat" 
+        set player's level to {mood.%uuid of player%}
+
+
+      else if arg-2 is "neutral":
+        set {mood.%uuid of player%} to {mood_Neutral}
+        send title "&eMood Change" with subtitle "You feel &f&lNeutural" 
+        set player's level to {mood.%uuid of player%}
+
+
       else if arg-2 is "okay":
-        set {mood.%uuid of player%} to 25
-        send title "&eCurrent Mood" with subtitle "&aHappy" 
+        set {mood.%uuid of player%} to {mood_Okay}
+        send title "&eMood Change" with subtitle "You feel &c&lOkay" 
+        set player's level to {mood.%uuid of player%}
+
+
       else if arg-2 is "sad":
-        set {mood.%uuid of player%} to 0
-        send title "&eCurrent Mood" with subtitle "&aHappy" 
+        set {mood.%uuid of player%} to {mood_Sad}
+        send title "&eMood Change" with subtitle "You feel &b&lSad" 
+        set player's level to {mood.%uuid of player%}
+
+
       else:
         # Handle invalid mood input
-        send "Invalid mood. Please choose from happy, great, okay, sad, or depressed."
+        send "Invalid mood. Please choose from happy, great, neutral, okay, or sad."
+
+command /moodcheck:
+  trigger:
+    send {mood.%uuid of player%}
+
+every 30 seconds:
+  loop all players:
+    if {mood.%uuid of loop-player%} > 1:
+      remove 1 from {mood.%uuid of loop-player%}
+      set loop-player's level to {mood.%uuid of loop-player%}
+    else:
+      send "Your mood is too low to decrease further." to loop-player
