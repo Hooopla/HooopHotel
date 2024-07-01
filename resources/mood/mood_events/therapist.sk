@@ -1,0 +1,25 @@
+on load:
+  set {_npc_theraphy_name} to "NO_NAME"
+command /therapy:
+  trigger:
+    play sound {sounds_NPCTalking} to player
+    wait 1 second
+    send title {emptyTitle} with subtitle "&eHello! Welcome!!"
+
+    set {_gui} to a new chest inventory with 1 rows named "&test"
+
+
+
+# Preventing ATM Actions
+# on left-click:
+#     set {_block_location} to location of event-block
+#     if {atm::%{_block_location}%} is set:
+#         cancel event
+#         # Setting Rows
+#         set {_guiScotiablock} to a new chest inventory with 1 rows named "&c&lScotiablock ATM"
+#         set slot 4 of {_guiScotiablock} to an paper named "Chequing Account" with lore "&bBalance: $%{balance.%uuid of player%}%"
+#         set slot 2 of {_guiScotiablock} to torch named "&aDeposit" with lore "&7Deposit to your bank account"
+#         set slot 6 of {_guiScotiablock} to a redstone torch named "&eWithdraw" with lore "&7Withdraw from your bank account"
+#         open {_guiScotiablock} to player
+#         play sound {successful} to player
+#         cancel event
