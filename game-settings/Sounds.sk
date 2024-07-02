@@ -12,3 +12,4 @@ on load:
   set {sounds_Okay} to "block.note_block.pling"
   set {sounds_Sad} to "entity.villager.no"
   set {sounds_NPCTalking} to "entity.villager.yes"
+  set {sounds_NPCRejectTalking} to "entity.villager.no"
