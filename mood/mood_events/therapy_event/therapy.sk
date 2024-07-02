@@ -1,0 +1,46 @@
+on load:
+  set {_npc_theraphy_name} to "NO_NAME"
+command /therapy:
+  trigger:
+    if {therapy_NPC_Talking_Cooldown::%uuid of player%} is not set:
+      set {therapy_NPC_Talking_Cooldown::%uuid of player%} to false
+    send "&7Dialogue: Hello welcome to my clinic! How can I help you?" to player
+    play sound {sounds_NPCTalking} to player
+    wait 1 second
+    set {_gui} to a new chest inventory with 1 rows named "Clinic"
+    set slot 1 of {_gui} to a Book and Quill named "&aTherapy Session" with lore "&7Can help with your mood." and "&e+25 Mood"
+    set slot 4 of {_gui} to a Player Head named "&aChat" with lore "&7Just a casual conversation" 
+    set slot 7 of {_gui} to a barrier named "&aExit" with lore "&7Close the menu"
+    open {_gui} to player
+    #cancel event
+
+on inventory click:
+    if name of event-inventory contains "Clinic":
+        cancel event
+
+# Clinic Interactions
+on inventory click:
+  # Check if the clicked item is named "&cBack"
+  if name of event-inventory is "Clinic":
+    if name of event-item is "&aExit":
+      close inventory of player 
+    else if name of event-item is "&aChat":
+      if {therapy_NPC_Talking_Cooldown::%uuid of player%} is false:
+        set {_randomNPCLine} to a random integer between 1 and 50
+        send "%{therapy_npc_line_%{_randomNPCLine}%}%"
+        close inventory of player 
+        play sound {sounds_NPCTalking} to player
+        set {therapy_NPC_Talking_Cooldown::%uuid of player%} to true
+        add 25 to {mood.%uuid of player%} # Add 1 Mood 
+        set player's level to {mood.%uuid of player%} # Let's update the player's Mood Tracker
+      else if {therapy_NPC_Talking_Cooldown::%uuid of player%} is true:
+        set {_randomNPCLine} to 51
+        send "%{therapy_npc_line_%{_randomNPCLine}%}%" 
+        close inventory of player 
+        play sound {sounds_NPCRejectTalking} to player
+
+# Dialogue Reset
+every 10 seconds:
+  loop all players:
+    set {therapy_NPC_Talking_Cooldown::%uuid of loop-player%} to false
+    
