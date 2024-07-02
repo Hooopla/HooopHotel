@@ -25,31 +25,39 @@ command /mood <text> <text>:
         send title "&eMood Set" with subtitle "You feel &a&lHappy" 
         set player's level to {mood.%uuid of player%}
         play sound {sounds_Happy} to player
+        remove slowness from player
+        remove blindness from player
         
       else if arg-2 is "great":
         set {mood.%uuid of player%} to {mood_Great}
         send title "&eMood Set" with subtitle "You feel &e&lGreat" 
         set player's level to {mood.%uuid of player%}
         play sound {sounds_Great} to player
+        remove slowness from player
+        remove blindness from player
 
       else if arg-2 is "neutral":
         set {mood.%uuid of player%} to {mood_Neutral}
         send title "&eMood Set" with subtitle "You feel &f&lNeutural" 
         set player's level to {mood.%uuid of player%}
         play sound {sounds_Neutral} to player
+        apply infinite potion of slowness of tier 1 without any particles to player 
 
       else if arg-2 is "okay":
         set {mood.%uuid of player%} to {mood_Okay}
         send title "&eMood Set" with subtitle "You feel &c&lOkay" 
         set player's level to {mood.%uuid of player%}
         play sound {sounds_Okay} to player
+        apply infinite potion of slowness of tier 2 without any particles to player  
+        apply potion of nausea of tier 4 without any particles to player for 10 seconds
 
       else if arg-2 is "sad":
         set {mood.%uuid of player%} to {mood_Sad}
         send title "&eMood Set" with subtitle "You feel &b&lSad" 
         set player's level to {mood.%uuid of player%}
         play sound {sounds_Sad} to player
-
+        apply infinite potion of slowness of tier 3 without any particles to player 
+        apply infinite potion of blindness of tier 1 without any particles to player 
       else:
         # Handle invalid mood input
         send "Invalid mood. Please choose from happy, great, neutral, okay, or sad."
@@ -103,6 +111,8 @@ every 30 seconds:
         else if {current_Mood::%uuid of loop-player%} = "Great":
           send title "&eMood Change" with subtitle "You feel &e&lGreat" to loop-player
           play sound {sounds_Great} to loop-player
+          remove slowness from loop-player
+          remove blindness from loop-player
         else if {current_Mood::%uuid of loop-player%} = "Neutral":
           send title "&eMood Change" with subtitle "You feel &f&lNeutral" to loop-player
           play sound {sounds_Neutral} to loop-player
