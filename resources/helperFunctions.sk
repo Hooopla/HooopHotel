@@ -1,0 +1,10 @@
+# Helper Function
+function hasEnoughBalance(balance: number, neededAmount: number) :: boolean:
+    if {_balance} >= {_neededAmount}:
+        return true
+    else:
+        return false
+
+function randomBetween(min: number, max: number) :: number:
+    set {_randomNumber} to a random integer between {_min} and {_max}
+    return {_randomNumber}

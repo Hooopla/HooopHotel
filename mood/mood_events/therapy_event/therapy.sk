@@ -20,26 +20,38 @@ on inventory click:
 
 # Clinic Interactions
 on inventory click:
-  # Check if the clicked item is named "&cBack"
   if name of event-inventory is "Clinic":
+    # Exit
     if name of event-item is "&aExit":
       close inventory of player 
+    # Chat
     else if name of event-item is "&aChat":
       if {therapy_NPC_Talking_Cooldown::%uuid of player%} is false:
-        set {_randomNPCLine} to a random integer between 1 and 50
+        set {_randomNPCLine} to randomBetween(1,10)
         send "%{therapy_npc_line_%{_randomNPCLine}%}%"
         close inventory of player 
         play sound {sounds_NPCTalking} to player
         set {therapy_NPC_Talking_Cooldown::%uuid of player%} to true
-        add 25 to {mood.%uuid of player%} # Add 1 Mood 
-        set player's level to {mood.%uuid of player%} # Let's update the player's Mood Tracker
+        add 1 to {mood.%uuid of player%}
+        updateMood(player)
       else if {therapy_NPC_Talking_Cooldown::%uuid of player%} is true:
-        set {_randomNPCLine} to 51
-        send "%{therapy_npc_line_%{_randomNPCLine}%}%" 
+        set {_randomNPCLine} to randomBetween(1,3)
+        send "%{therapy_npc_line_nochat_%{_randomNPCLine}%}%" to player
         close inventory of player 
         play sound {sounds_NPCRejectTalking} to player
+    # Therapy Session
+    else if name of event-item is "&aTherapy Session":
+      set {_playerBalance} to {balance.%uuid of player%}
+      set {_requiredAmount} to 50 
+      if hasEnoughBalance({_playerBalance}, {_requiredAmount}) is true:
+        send "You have enough balance." to player
+      else:
+        set {_randomNPCLine} to randomBetween(1,3)
+        send "%{therapy_Not_Enough_Money_%{_randomNPCLine}%}%" to player
 
-# Dialogue Reset
+
+
+# Dialogue Cooldown
 every 10 seconds:
   loop all players:
     set {therapy_NPC_Talking_Cooldown::%uuid of loop-player%} to false
