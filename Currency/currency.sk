@@ -12,3 +12,4 @@ command /reset-funds:
   trigger:
     set {balance.%uuid of player%} to 0 
     send title "Set Balance back to 0" to player
+
