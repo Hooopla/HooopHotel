@@ -1,0 +1,4 @@
+on chat:
+  loop players within 10 blocks of player:
+    cancel event for player
+    send "Nearby player: %name of event-player% said: %message%" to loop-player

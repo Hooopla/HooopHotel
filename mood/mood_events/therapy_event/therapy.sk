@@ -44,12 +44,35 @@ on inventory click:
       set {_playerBalance} to {balance.%uuid of player%}
       set {_requiredAmount} to 50 
       if hasEnoughBalance({_playerBalance}, {_requiredAmount}) is true:
-        send "You have enough balance." to player
+        set {room_Therapy} to location at 117.540, -45, 29.745 in world "world"
+        set {lastposition::%uuid of player%} to location of player # For teleporting them back later!
+        teleport player to {room_Therapy} 
+        apply blindness to player for 1 second
+        wait 3 seconds
+        play sound {sounds_NPCTalking} to player
+        send "&7Dialogue: Hello, you must be... %name of player%? You're a little early but... welcome."
+        wait 3 seconds 
+        play sound {sounds_NPCTalking} to player
+        send "&7Dialogue: How are you feeling today??"
+        wait 3 seconds
+        set {_moodOptions}  to a new chest inventory with 1 rows named "&eHow are you feeling?"
+        set slot 1 of {_moodOptions} to 1 dirt with name "Happy"
+        set slot 2 of {_moodOptions} to 1 dirt with name "Content"
+        set slot 3 of {_moodOptions} to 1 dirt with name "Neutral"
+        set slot 4 of {_moodOptions} to 1 dirt with name "Okay"
+        set slot 5 of {_moodOptions} to 1 dirt with name "Sad"
+        open {_moodOptions} to player 
+
+        
       else:
         set {_randomNPCLine} to randomBetween(1,3)
         send "%{therapy_Not_Enough_Money_%{_randomNPCLine}%}%" to player
 
 
+
+# Incase they disconnect mid way teleport them back!
+on disconnect:
+  teleport player to {lastposition::%uuid of player%}
 
 # Dialogue Cooldown
 every 10 seconds:

@@ -65,7 +65,7 @@ command /mood <text> <text>:
         apply infinite potion of blindness of tier 1 without any particles to player 
       else:
         # Handle invalid mood input
-        send "Invalid mood. Please choose from happy, Content, neutral, okay, or sad."
+        send "Invalid mood. Please choose from happy, content, neutral, okay, or sad."
 
 command /moodcheck:
   trigger:
@@ -184,8 +184,8 @@ function updateMood(player: player):
       set {last_Mood::%uuid of {_player}%} to {current_Mood::%uuid of {_player}%}
 
 
-every 30 seconds:
-    loop all players:
-        system_UpdateMood(loop-player)
+# every 30 seconds:
+#     loop all players:
+#         system_UpdateMood(loop-player)
 
     

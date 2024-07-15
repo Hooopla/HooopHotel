@@ -20,3 +20,6 @@ on load:
   set {therapy_Not_Enough_Money_1} to "I’d be happy to help… once you have enough emeralds."
   set {therapy_Not_Enough_Money_2} to "Let’s see, you’re a little short on emeralds… you can come back when you have enough."
   set {therapy_Not_Enough_Money_3} to "Let's start when I receive enough emeralds. You’re still missing… a few…"
+
+  # Scene 1
+  set {therapy_event_line_1} to ""
